@@ -1,6 +1,9 @@
 import * as Yup from 'yup';
 import { addMonths, parseISO } from 'date-fns';
 
+import Queue from '../../lib/Queue';
+import RegistrationMail from '../jobs/RegistrationMail';
+
 import Plan from '../models/Plan';
 import Student from '../models/Student';
 import Registration from '../models/Registration';
@@ -39,6 +42,16 @@ class RegistrationController {
       start_date,
       end_date,
       price,
+    });
+
+    const mailData = {
+      student: student.name,
+      email: student.email,
+      plan: { title: plan.title, price, end_date },
+    };
+
+    await Queue.add(RegistrationMail.key, {
+      mailData,
     });
 
     return res.json(registration);
