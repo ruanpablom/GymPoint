@@ -2,14 +2,27 @@ import { Router } from 'express';
 
 import StudentController from './app/controllers/StudentController';
 import SessionController from './app/controllers/SessionController';
+import PlanController from './app/controllers/PlanController';
+import RegistrationController from './app/controllers/RegistrationController';
 
-import authMiddleWares from './app/middlewares/auth';
+import authMiddleware from './app/middlewares/auth';
+import adminMiddleware from './app/middlewares/admin';
 
 const routes = new Router();
 
 routes.post('/sessions', SessionController.store);
 
-routes.use(authMiddleWares);
+routes.use(authMiddleware);
+
 routes.post('/students', StudentController.store);
+
+routes.use(adminMiddleware);
+
+routes.post('/plans', PlanController.store);
+routes.get('/plans', PlanController.index);
+routes.put('/plans/:id', PlanController.update);
+routes.delete('/plans/:id', PlanController.delete);
+
+routes.post('/registrations', RegistrationController.store);
 
 export default routes;
