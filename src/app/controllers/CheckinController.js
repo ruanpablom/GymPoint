@@ -1,15 +1,10 @@
 import { Op } from 'sequelize';
 import { subDays } from 'date-fns';
 
-import Student from '../models/Student';
 import Checkin from '../models/Checkin';
 
 class CheckinController {
   async index(req, res) {
-    const student = await Student.findByPk(req.params.id);
-    if (!student) {
-      res.status(400).json({ error: 'Student does not exists' });
-    }
     const checkins = await Checkin.findAll({
       where: {
         student_id: req.params.id,
@@ -20,11 +15,6 @@ class CheckinController {
   }
 
   async store(req, res) {
-    const student = await Student.findByPk(req.params.id);
-    if (!student) {
-      res.status(400).json({ error: 'Student does not exists' });
-    }
-
     const today = new Date();
 
     const checkinsIn7Days = await Checkin.findAndCountAll({
